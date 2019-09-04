@@ -11,20 +11,20 @@ import UIKit
 
 class ImageScaleTransitionDismiss : NSObject  {
 
-    static func animateTransitionObject(transitionObject : ImageScaleTransitionObject, fromViewController : UIViewController, toViewController : UIViewController, containerView : UIView, usingNavigationController: Bool, animationOptions: UIViewAnimationOptions, fadeOutAnimationDelay: NSTimeInterval) {
+    static func animateTransitionObject(transitionObject : ImageScaleTransitionObject, fromViewController : UIViewController, toViewController : UIViewController, containerView : UIView, usingNavigationController: Bool, animationOptions: UIView.AnimationOptions, fadeOutAnimationDelay: TimeInterval) {
 
-        let viewEndCenter = fromViewController.view!.convertPoint(transitionObject.viewToAnimateFrom.center, toView: containerView)
+        let viewEndCenter = fromViewController.view!.convert(transitionObject.viewToAnimateFrom.center, to: containerView)
 
-        transitionObject.viewToAnimateTo.hidden = true
-        transitionObject.viewToAnimateFrom.hidden = true
+        transitionObject.viewToAnimateTo.isHidden = true
+        transitionObject.viewToAnimateFrom.isHidden = true
 
         _ = transitionObject.duration
         
-        let viewToAnimateFromCopy = self.getImageFromImageScaleTransitionObject(transitionObject)
-        viewToAnimateFromCopy.frame = self.startFrame(transitionObject, withNavigationController: usingNavigationController, controllerAnimatingFrom: fromViewController ,controllerAnimatingTo: toViewController)
-        let viewEndFrame = self.endFrame(transitionObject, containerView: containerView).frame
-        if self.endFrame(transitionObject, containerView: containerView).hasSet == false {
-            viewToAnimateFromCopy.hidden = true
+        let viewToAnimateFromCopy = self.getImageFromImageScaleTransitionObject(transitionObject: transitionObject)
+        viewToAnimateFromCopy.frame = self.startFrame(transitionObject: transitionObject, withNavigationController: usingNavigationController, controllerAnimatingFrom: fromViewController ,controllerAnimatingTo: toViewController)
+        let viewEndFrame = self.endFrame(transitionObject: transitionObject, containerView: containerView).frame
+        if self.endFrame(transitionObject: transitionObject, containerView: containerView).hasSet == false {
+            viewToAnimateFromCopy.isHidden = true
         }
 
         
@@ -36,21 +36,21 @@ class ImageScaleTransitionDismiss : NSObject  {
 
         containerView.addSubview(viewToAnimateFromCopy)
 
-        UIView.animateWithDuration(transitionObject.duration, delay: 0, options: animationOptions, animations: {
+        UIView.animate(withDuration: transitionObject.duration, delay: 0, options: animationOptions, animations: {
             
             if viewHasRoundedCorders == true {
                 viewToAnimateFromCopy.center = viewEndCenter
-                viewToAnimateFromCopy.transform = CGAffineTransformMakeScale(scaleSize, scaleSize)
+                viewToAnimateFromCopy.transform = CGAffineTransform(scaleX: scaleSize, y: scaleSize)
             } else {
                 viewToAnimateFromCopy.frame = viewEndFrame
             }
             }) { (finished) in}
         
 
-        afterDelay((transitionObject.duration + fadeOutAnimationDelay)) {
+        afterDelay(seconds: (transitionObject.duration + fadeOutAnimationDelay)) {
             viewToAnimateFromCopy.removeFromSuperview()
-            transitionObject.viewToAnimateTo.hidden = false
-            transitionObject.viewToAnimateFrom?.hidden = false
+            transitionObject.viewToAnimateTo.isHidden = false
+            transitionObject.viewToAnimateFrom?.isHidden = false
         }
     }
 
@@ -59,12 +59,12 @@ class ImageScaleTransitionDismiss : NSObject  {
         var viewToAnimateFromCopy : UIImageView!
         if let isImageInViewToAnimateFrom = transitionObject.viewToAnimateFrom.image {
             viewToAnimateFromCopy = UIImageView(image: isImageInViewToAnimateFrom.copyImage())
-            viewToAnimateFromCopy.contentMode = UIViewContentMode.ScaleAspectFill
+            viewToAnimateFromCopy.contentMode = UIView.ContentMode.scaleAspectFill
         }
         
         if let isImageInViewToAnimateTo = transitionObject.viewToAnimateTo.image {
             viewToAnimateFromCopy = UIImageView(image: isImageInViewToAnimateTo.copyImage())
-            viewToAnimateFromCopy.contentMode = UIViewContentMode.ScaleAspectFill
+            viewToAnimateFromCopy.contentMode = UIView.ContentMode.scaleAspectFill
         }
         
         assert(viewToAnimateFromCopy != nil, "Trying to animate with no Image")
@@ -76,7 +76,7 @@ class ImageScaleTransitionDismiss : NSObject  {
     
     static func startFrame(transitionObject : ImageScaleTransitionObject, withNavigationController : Bool, controllerAnimatingFrom : UIViewController, controllerAnimatingTo : UIViewController)->CGRect {
         var frame = transitionObject.viewToAnimateTo.frame
-        if withNavigationController == true && controllerAnimatingTo.navigationController?.navigationBar.translucent == false {
+        if withNavigationController == true && controllerAnimatingTo.navigationController?.navigationBar.isTranslucent == false {
             frame.origin.y += controllerAnimatingFrom.heightOfNavigationControllerAndStatusAtViewController()
         }
         return frame
@@ -86,7 +86,7 @@ class ImageScaleTransitionDismiss : NSObject  {
     static func endFrame(transitionObject : ImageScaleTransitionObject, containerView : UIView)->(frame : CGRect , hasSet : Bool) {
         var viewEndFrame = transitionObject.viewToAnimateFrom.frame
         if transitionObject.viewToAnimateFrom.superview != nil {
-            viewEndFrame = transitionObject.viewToAnimateFrom.superview!.convertRect(transitionObject.viewToAnimateFrom.frame, toView: containerView)
+            viewEndFrame = transitionObject.viewToAnimateFrom.superview!.convert(transitionObject.viewToAnimateFrom.frame, to: containerView)
             return (viewEndFrame, true)
         } else {
             print("Error: The view you are trying to animate to in dissmess, has no super view")

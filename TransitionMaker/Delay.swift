@@ -9,7 +9,8 @@
 import Foundation
 
 
-func afterDelay(seconds: Double, completion:() -> Void) {
-    let when = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
-    dispatch_after(when, dispatch_get_main_queue(), completion)
+func afterDelay(seconds: Double, completion:@escaping () -> Void) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+        completion()
+    }
 }

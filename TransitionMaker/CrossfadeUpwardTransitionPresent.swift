@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 class CrossfadeUpwardTransitionPresent: NSObject {
-    static func animateTransitionObject(transitionObject : CrossfadeUpwardTransitionObject, fromViewController : UIViewController, toViewController : UIViewController, containerView : UIView, animationOptions: UIViewAnimationOptions, fadeOutAnimationDelay: NSTimeInterval) {
+    static func animateTransitionObject(transitionObject : CrossfadeUpwardTransitionObject, fromViewController : UIViewController, toViewController : UIViewController, containerView : UIView, animationOptions: UIView.AnimationOptions, fadeOutAnimationDelay: TimeInterval) {
         
         let upwardOffset: CGFloat = 30
         
         containerView.bringSubviewToFront(transitionObject.viewToAnimateTo)
         
-        var finalFrame = toViewController.view!.convertRect(transitionObject.viewToAnimateTo.frame, toView: containerView)
+        var finalFrame = toViewController.view!.convert(transitionObject.viewToAnimateTo.frame, to: containerView)
         if let isFrameToAnimateTo = transitionObject.frameToAnimateTo {
             finalFrame = isFrameToAnimateTo
         }
@@ -32,16 +32,16 @@ class CrossfadeUpwardTransitionPresent: NSObject {
         viewCopy.frame = startFrame
         
         
-        transitionObject.viewToAnimateTo.hidden = true
+        transitionObject.viewToAnimateTo.isHidden = true
         viewCopy.alpha = 0
 
-        UIView.animateWithDuration(transitionObject.duration, delay: 0, options: animationOptions, animations: {
+        UIView.animate(withDuration: transitionObject.duration, delay: 0, options: animationOptions, animations: {
             
             viewCopy.frame = finalFrame
             viewCopy.alpha = 1
             }) { (done) in
-                transitionObject.viewToAnimateTo.hidden = false
-                afterDelay(0.2, completion: {
+                transitionObject.viewToAnimateTo.isHidden = false
+                afterDelay(seconds: 0.2, completion: {
                     viewCopy.removeFromSuperview()
                 })
         }

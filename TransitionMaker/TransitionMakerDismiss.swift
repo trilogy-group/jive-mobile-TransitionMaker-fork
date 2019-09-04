@@ -10,15 +10,15 @@ import Foundation
 import UIKit
 
 class TransitionMakerDismiss : NSObject , UIViewControllerAnimatedTransitioning {
-    let animationOptions = UIViewAnimationOptions.CurveEaseInOut
-    var duration : NSTimeInterval!
+    let animationOptions = UIView.AnimationOptions.curveEaseInOut
+    var duration : TimeInterval!
     var transitionObjects: Array<TransitionObject>!
     var usingNavigationController : Bool
-    let fadeOutAnimationDuration : NSTimeInterval
+    let fadeOutAnimationDuration : TimeInterval
     let alphaZero : CGFloat = 0
-    let fadeOutAnimationDelay : NSTimeInterval
+    let fadeOutAnimationDelay : TimeInterval
 
-    init(transitionObjects : Array<TransitionObject>, usingNavigationController : Bool, duration: NSTimeInterval, fadeOutAnimationDuration : NSTimeInterval, fadeOutAnimationDelay : NSTimeInterval) {
+    init(transitionObjects : Array<TransitionObject>, usingNavigationController : Bool, duration: TimeInterval, fadeOutAnimationDuration : TimeInterval, fadeOutAnimationDelay : TimeInterval) {
         self.transitionObjects  = transitionObjects
         self.usingNavigationController = usingNavigationController
         self.fadeOutAnimationDuration = fadeOutAnimationDuration
@@ -27,14 +27,14 @@ class TransitionMakerDismiss : NSObject , UIViewControllerAnimatedTransitioning 
         self.duration = duration
     }
 
-    @objc func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
+    @objc func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return self.duration
     }
 
-    @objc func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-        let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)
-        let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
-        let containerView = transitionContext.containerView()
+    @objc func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
+        let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
+        let containerView = transitionContext.containerView
 
         if self.usingNavigationController == true {
             containerView.addSubview((toViewController!.view)!)
@@ -44,15 +44,15 @@ class TransitionMakerDismiss : NSObject , UIViewControllerAnimatedTransitioning 
         containerView.addSubview((fromViewController!.view)!)
 
         for transitionObject in self.transitionObjects {
-            self.animateTransitionObject(transitionObject, fromViewController: fromViewController!, toViewController: toViewController!, containerView: containerView)
+            self.animateTransitionObject(transitionObject: transitionObject, fromViewController: fromViewController!, toViewController: toViewController!, containerView: containerView)
         }
 
-        UIView.animateWithDuration(self.duration, animations: {
+        UIView.animate(withDuration: self.duration, animations: {
             fromViewController?.view.alpha = self.alphaZero
             }, completion: nil)
 
-        afterDelay(self.duration) {
-            UIView.animateWithDuration(self.duration/2, animations: {
+        afterDelay(seconds: self.duration) {
+            UIView.animate(withDuration: self.duration/2, animations: {
                 toViewController?.view.alpha = 1.0
                 }, completion: { (finish) in
                     transitionContext.completeTransition(true)
@@ -64,9 +64,9 @@ class TransitionMakerDismiss : NSObject , UIViewControllerAnimatedTransitioning 
 
         switch transitionObject {
         case let imageScaleTransition as ImageScaleTransitionObject:
-            ImageScaleTransitionDismiss.animateTransitionObject(imageScaleTransition, fromViewController: fromViewController, toViewController: toViewController, containerView: containerView, usingNavigationController: self.usingNavigationController, animationOptions: self.animationOptions, fadeOutAnimationDelay: self.fadeOutAnimationDelay)
+            ImageScaleTransitionDismiss.animateTransitionObject(transitionObject: imageScaleTransition, fromViewController: fromViewController, toViewController: toViewController, containerView: containerView, usingNavigationController: self.usingNavigationController, animationOptions: self.animationOptions, fadeOutAnimationDelay: self.fadeOutAnimationDelay)
         case let crossFadeUpwards as CrossfadeUpwardTransitionObject:
-            CrossfadeUpwardTransitionDismiss.animateTransitionObject(crossFadeUpwards, fromViewController: fromViewController, toViewController: toViewController, containerView: containerView, animationOptions: animationOptions, fadeOutAnimationDelay: self.fadeOutAnimationDelay)
+            CrossfadeUpwardTransitionDismiss.animateTransitionObject(transitionObject: crossFadeUpwards, fromViewController: fromViewController, toViewController: toViewController, containerView: containerView, animationOptions: animationOptions, fadeOutAnimationDelay: self.fadeOutAnimationDelay)
         default: break
 
         }
