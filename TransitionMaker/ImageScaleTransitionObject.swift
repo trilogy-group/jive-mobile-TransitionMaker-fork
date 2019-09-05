@@ -18,14 +18,14 @@ public class ImageScaleTransitionObject : NSObject, TransitionObject {
     internal var duration : TimeInterval
     
     
-    public init(viewToAnimateFrom : UIImageView, viewToAnimateTo: UIImageView, duration : TimeInterval, frameToAnimateTo : CGRect) {
+    @objc public init(viewToAnimateFrom : UIImageView, viewToAnimateTo: UIImageView, duration : TimeInterval, frameToAnimateTo : CGRect) {
         self.viewToAnimateFrom = viewToAnimateFrom
         self.frameToAnimateTo = frameToAnimateTo
         self.viewToAnimateTo = viewToAnimateTo
         self.duration = duration
     }
     
-    public init(viewToAnimateFrom : UIImageView, viewToAnimateTo: UIImageView, duration : TimeInterval) {
+    @objc public init(viewToAnimateFrom : UIImageView, viewToAnimateTo: UIImageView, duration : TimeInterval) {
         self.viewToAnimateFrom = viewToAnimateFrom
         self.viewToAnimateTo = viewToAnimateTo
         self.duration = duration

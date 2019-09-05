@@ -6,6 +6,7 @@ s.summary           = 'TransitionMaker'
 s.homepage          = 'https://github.com/mcmatan/TransitionMaker'
 s.ios.deployment_target = '9.0'
 s.platform = :ios, '9.0'
+s.swift_versions = ['4.2']
 s.license           = {
 :type => 'MIT',
 :file => 'LICENSE'

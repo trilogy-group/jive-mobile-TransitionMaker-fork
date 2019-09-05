@@ -14,13 +14,13 @@ import UIKit
     internal var frameToAnimateTo : CGRect?
     internal var duration : TimeInterval
     
-    public init(viewToAnimateTo: UIView , frameToAnimateTo : CGRect?, duration : TimeInterval) {
+    @objc public init(viewToAnimateTo: UIView , frameToAnimateTo : CGRect, duration : TimeInterval) {
         self.viewToAnimateTo = viewToAnimateTo
         self.frameToAnimateTo = frameToAnimateTo
         self.duration = duration
     }
     
-    public init(viewToAnimateTo: UIView , duration : TimeInterval) {
+    @objc public init(viewToAnimateTo: UIView , duration : TimeInterval) {
         self.viewToAnimateTo = viewToAnimateTo
         self.duration = duration
     }

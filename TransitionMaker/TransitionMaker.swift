@@ -31,7 +31,7 @@ public class TransitionMaker : NSObject , UIViewControllerTransitioningDelegate,
     public var fadeOutAnimationDelayPresent : TimeInterval = 0.1 //After animation happends, this is the delay before fade out of the image, use if original image takes time to load.
     public var fadeOutAnimationDelayDismiss : TimeInterval = 0.1 //After animation happends, this is the delay before fade out of the image, use if original image takes time to load.
     
-    public init(transitionObjects : Array<TransitionObject>, usingNavigationController : Bool, duration: TimeInterval) {
+    @objc public init(transitionObjects : Array<TransitionObject>, usingNavigationController : Bool, duration: TimeInterval) {
         self.transitionObjects = transitionObjects
         self.usingNavigationController = usingNavigationController
         self.duration = duration
